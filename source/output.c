@@ -11,16 +11,17 @@
 
 
 
-
 int doCommand(char *command) {
 
 	char **cArgv = NULL;
-	commandToArgv(command, cArgv);
+	commandToArgv(command, &cArgv);
+
+	printf("command to be run: %s\n", cArgv[0]);
 
 	//Child:
 	if (fork() == 0) {
-		execlp("ls", "ls", NULL);
-		//execvp(cArgv[0], cArgv);
+
+		execvp(cArgv[0], cArgv);
 	} 
 
 	//Parent
@@ -34,13 +35,16 @@ int doCommand(char *command) {
 
 
 
-
 //should be 'normalised' first. .ie no extra spaces/tabs
 
-char **commandToArgv(char *command, char **comArgv) {
-	
-	printf("do convert\n");
-	return NULL;
+int commandToArgv(char *command, char ***comArgv) {
+
+
+	*comArgv = malloc(20);
+	*comArgv[0] = "ls";
+
+
+	return 0;
 }
 
 

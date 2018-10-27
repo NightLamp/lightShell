@@ -23,7 +23,7 @@
 	extern int getCommand(char *buffer);
 	//output.c
 	extern int doCommand(char *command);
-	extern char **commandToArgv(char *command, char **comArgv);
+	extern int commandToArgv(char *command, char ***comArgv);
 	//utils.c
 	extern char *getSubstring(char *str, int start, int end);
 
