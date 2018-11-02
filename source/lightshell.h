@@ -17,13 +17,15 @@
 
 // preprocessor constants
 #define BUFFSIZE 1024
+#define SMOLBUFF 64
 
 // prototypes
 	//input.c
 	extern int getCommand(char *buffer);
 	//output.c
 	extern int doCommand(char *command);
-	extern int commandToArgv(char *command, char ***comArgv);
+	extern char **splitCommand(char **command);
+	extern int commandToArgvOld(char *command, char ***comArgv);
 	//utils.c
 	extern char *getSubstring(char *str, int start, int end);
 
