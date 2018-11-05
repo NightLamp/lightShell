@@ -5,6 +5,8 @@
 
 int changeDirectory(char *path) {
 
+	//only works with absolute paths
+
 	if (chdir(path) != 0) {
 
 		fprintf(stderr, "cd error\n");	//needs to check error status to see why
