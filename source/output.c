@@ -11,7 +11,7 @@
 
 
 
-int doCommand(char *command) {
+int execCommand(char *command) {
 
 	char **cArgv = splitCommand(&command);
 	

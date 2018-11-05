@@ -23,7 +23,7 @@
 	//input.c
 	extern int getCommand(char *buffer);
 	//output.c
-	extern int doCommand(char *command);
+	extern int execCommand(char *command);
 	extern char **splitCommand(char **command);
 	extern int commandToArgvOld(char *command, char ***comArgv);
 	//utils.c

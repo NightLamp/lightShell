@@ -20,7 +20,7 @@ int main(int argc, char * argv[]) {
 		printf("$: ");
 		getCommand(command);
 
-		doCommand(command);
+		execCommand(command);
 	}
 	while (strcmp(command, "exit") != 0);
 	

@@ -8,7 +8,6 @@ OBJECTS = input.o output.o utils.o
 
 lish : lightshell.o
 	$(C99) $(CFLAGS) -o lish lightshell.c $(OBJECTS)
-	make clean
 
 lightshell.o : lightshell.h  lightshell.c input.o output.o
 	$(C99) $(CFLAGS) -c -o lightshell.o lightshell.c
