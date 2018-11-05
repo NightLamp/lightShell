@@ -22,8 +22,11 @@
 // prototypes
 	//input.c
 	extern int getCommand(char *buffer);
-	//output.c
+	//commands.c	
+	extern int changeDirectory(char *path);
 	extern int execCommand(char *command);
+	extern int doCommand(char *command);
+	//execute.c
 	extern char **splitCommand(char **command);
 	extern int commandToArgvOld(char *command, char ***comArgv);
 	//utils.c
