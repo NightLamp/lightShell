@@ -1,4 +1,4 @@
-# lightShell
-lets try making a super basic shell in C. 
+# myShell
+This is my attempt at making a shell using the c programming language.
 
-Right now I only expect it to work on Linux.
+Made using ubuntu so wont expect it to work on other platforms just yet.
