@@ -1,12 +1,5 @@
-/**
- Project:	lightshell
 
- file: 	output.c
- By: 	NightLamp
-
-**/
-
-#include "lightshell.h"
+#include "myShell.h"
 
 
 
