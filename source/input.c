@@ -11,14 +11,16 @@
  @return	int		1 for success
 					0 for fail
 **/
-int getCommand(char *buffer) {
-
-	if (fgets(buffer, BUFFSIZE, stdin) == NULL) {
+int getCommand(char *buffer) 
+{
+	if (fgets(buffer, BUFFSIZE, stdin) == NULL) 
+	{
 		//line read failure
 		fprintf(stderr, "fgets failure\n");
 		exit(EXIT_FAILURE);
 	}
-	else {
+	else 
+	{
 		int commandLen = strlen(buffer);
 		buffer[commandLen-1] = '\0';	//remove newline
 
