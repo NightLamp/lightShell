@@ -6,4 +6,14 @@ NOTE this is not in order
 - get USERNAME, PCNAME, CWD etc for prompt
 
 "execute.c"
-- check status of command and print error if failed?
+ - check status of command and print error if failed?
+ - builtin functions (cd etc..)
+
+ideas to add
+ - ability to move cursor/edit line
+ - history and tab for autocomplete?
+ - piping
+ - shell scripts?
+ - multitasking (dont wait for completion)
+ - a more-or-less GUI based folder explorer (text based)
+ - wildcards
