@@ -12,6 +12,7 @@ NOTE this is not in order
 ideas to add
  - ability to move cursor/edit line
  - history and tab for autocomplete?
+ - directory history and easy back and forward movement
  - piping
  - shell scripts?
  - multitasking (dont wait for completion)
