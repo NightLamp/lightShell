@@ -14,7 +14,7 @@ main.o : main.h  main.c input.o execute.o
 input.o : main.h input.c utils.o
 	$(C99) $(CFLAGS) -c -o input.o input.c
 
-execute.o : main.h execute.c 
+execute.o : main.h execute.c utils.o 
 	$(C99) $(CFLAGS) -c -o execute.o execute.c
 
 utils.o : utils.c

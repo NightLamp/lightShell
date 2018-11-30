@@ -8,6 +8,8 @@ NOTE this is not in order
 "execute.c"
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
+ - only split command on "correct" spaces 
+ - function cd: relative paths
 
 ideas to add
  - ability to move cursor/edit line
