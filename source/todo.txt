@@ -9,9 +9,10 @@ NOTE this is not in order
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
  - only split command on "correct" spaces 
- - function cd: relative paths
+ - function cd: - relative paths
+				- cd with no args go to home
 
-ideas to add
+features to add
  - ability to move cursor/edit line
  - history and tab for autocomplete?
  - directory history and easy back and forward movement
