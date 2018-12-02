@@ -9,8 +9,7 @@ NOTE this is not in order
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
  - only split command on "correct" spaces 
- - function cd: - relative paths
-				- cd with no args go to home
+ - function cd: - home path expansion
 
 features to add
  - move ~ expanding to home to parsing function (in input.c)????
