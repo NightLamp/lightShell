@@ -56,6 +56,8 @@ int runExecutable(char **args)
 	{
 		//this is the child
 		execvp(args[0], args);
+		fprintf(stderr, "msh: cannot run %s\n", args[0]);
+		exit(EXIT_FAILURE);
 	}
 	else
 	{
