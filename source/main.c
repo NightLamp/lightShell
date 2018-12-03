@@ -21,9 +21,14 @@ int main(int argc, char * argv[])
 
 		
 		//is it exit?
-		strLower(command);
-		if (strcmp("exit", command) == 0) return 0;
-
+		char *temp = strndup(command, 4); 
+		strLower(temp);
+		if (strcmp("exit", temp) == 0) 
+		{
+			return 0;
+		}
+		free(temp);
+		
 		//command execution
 		interpret(command);
 

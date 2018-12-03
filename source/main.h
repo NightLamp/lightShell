@@ -16,3 +16,4 @@ extern int getCommand(char *buffer);
 
 
 extern char *strdup(char *str);
+extern char *strndup(char *str, int bound);
