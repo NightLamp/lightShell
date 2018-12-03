@@ -157,9 +157,10 @@ int cd(char **args)
 //something wrong in this block
 		//expand home path
 		char *trimmedPath = getSubstring(args[1], 1, strlen(args[1]));
-		sprintf(path, "%s%s", homePath, trimmedPath); // i think problem is here
-		printf("path now is %s\n", path);
+		path = malloc(sizeof(char) * (strlen(homePath) + strlen(trimmedPath)));
+		sprintf(path, "%s%s", homePath, trimmedPath); 
 		free(trimmedPath);
+		//need to free path
 	}
 	else 
 	{
@@ -169,6 +170,7 @@ int cd(char **args)
 	if (chdir(path) != 0)
 	{
 		perror("cd");
+		if (args[1][0] == '~') free(path);
 		return -1;
 	}
 	return 0;
