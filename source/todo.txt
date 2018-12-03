@@ -9,12 +9,11 @@ NOTE this is not in order
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
  - only split command on "correct" spaces 
- - function cd: - home path expansion
 
 features to add
  - move ~ expanding to home to parsing function (in input.c)????
  - ability to move cursor/edit line
- - history and tab for autocomplete?
+ - command history and tab for autocomplete?
  - directory history and easy back and forward movement
  - piping
  - shell scripts?
