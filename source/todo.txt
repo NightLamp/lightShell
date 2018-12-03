@@ -4,7 +4,6 @@ NOTE this is not in order
 "main.c"
  - parse a command line (remove excess spaces): put in input.c
  - get USERNAME, PCNAME, CWD etc for prompt
- - only lower case the command given temporailiry to check for exit
 
 "execute.c"
  - check status of command and print error if failed?
@@ -14,7 +13,7 @@ NOTE this is not in order
 
 features to add
  - move ~ expanding to home to parsing function (in input.c)????
- - ability to move cursor/edit line
+ - ability to move cursor/edit input
  - command history and tab for autocomplete?
  - directory history and easy back and forward movement
  - piping
