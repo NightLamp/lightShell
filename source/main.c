@@ -18,7 +18,7 @@ int main(int argc, char * argv[])
 		getCommand(command);
 
 		//parse input
-
+		normaliseSpaces(command);
 		
 		//is it exit?
 		char *temp = strndup(command, 4); 

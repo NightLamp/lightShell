@@ -13,7 +13,7 @@
 
 extern int interpret(char *command);
 extern int getCommand(char *buffer);
-
+extern int normaliseSpaces(char *str);
 
 extern char *strdup(char *str);
 extern char *strndup(char *str, int bound);
