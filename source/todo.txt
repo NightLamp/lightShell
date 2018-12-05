@@ -2,8 +2,10 @@ This is a list of things that need to be done.
 NOTE this is not in order
 
 "main.c"
- - parse a command line (remove excess spaces): put in input.c
  - get USERNAME, PCNAME, CWD etc for prompt
+
+"input.c"
+ - make normaliseSpaces recognise quotes and escape letters
 
 "execute.c"
  - check status of command and print error if failed?
