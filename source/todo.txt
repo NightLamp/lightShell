@@ -5,7 +5,7 @@ NOTE this is not in order
  - get USERNAME, PCNAME, CWD etc for prompt
 
 "input.c"
- - make normaliseSpaces recognise quotes and escape letters
+ - get double quotes and it expansion working?
 
 "execute.c"
  - check status of command and print error if failed?
