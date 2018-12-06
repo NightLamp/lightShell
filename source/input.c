@@ -43,7 +43,10 @@ int normaliseSpaces(char *str)
 
 	char temp[strlen(str)];
 	int state = isspace(str[0]) ? 1 : 0;
+	int quoted = 0;
+
 	int j = 0; 
+	
 
 	for (int i = 0; str[i] != '\0'; i++)
 	{
@@ -56,12 +59,16 @@ int normaliseSpaces(char *str)
 		//if no space before and no space now: next (s to 0)
 		//if space before and no space now: next (s to 0)
 
-		if (state == 0 && isspace(str[i]))		
+		if (str[i] == '\'')
+		{
+			quoted = !quoted;
+		}
+		else if (state == 0 && isspace(str[i]))		
 		{
 			temp[j++] = ' ';
 			state = 1;
 		}
-		else if (isspace(str[i]) == 0)
+		else if (isspace(str[i]) == 0 || quoted)
 		{
 			temp[j++] = str[i];
 			state = 0;
