@@ -17,3 +17,4 @@ extern int normaliseSpaces(char *str);
 
 extern char *strdup(char *str);
 extern char *strndup(char *str, int bound);
+extern int gethostname(char *buf, size_t len);
