@@ -54,11 +54,6 @@ int normaliseSpaces(char *str)
 			//1 if prev wspace
 			//0 if prev not wspace
 		
-		//if no space before and space now: add space to new string (s to 1)
-		//if space before and space now: next (s to 1)
-		//if no space before and no space now: next (s to 0)
-		//if space before and no space now: next (s to 0)
-
 		if (str[i] == '\'')
 		{
 			quoted = !quoted;
