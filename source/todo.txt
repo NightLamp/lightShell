@@ -6,7 +6,6 @@ NOTE this is not in order
 
 "input.c"
  - get double quotes and it expansion working?
- - ignore comments
 
 "execute.c"
  - check status of command and print error if failed?
