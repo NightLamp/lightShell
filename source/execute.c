@@ -20,20 +20,17 @@ int interpret(char *command)
 	//split command into an array of strings thats null terminated
 	char **args = splitCommand(command);
 
-	//is command builtin?
-		//check builtin list
-		//run if there	
-		char *com = strdup(args[0]);
-		strLower(com);
+	char *com = strdup(args[0]);
+	strLower(com);
 
-		if (strcmp(com, "cd") == 0)
-		{
-			cd(args);
-		}
-		else
-		{
-			runExecutable(args);
-		}
+	if (strcmp(com, "cd") == 0)
+	{
+		cd(args);
+	}
+	else if ((strncmp(com, "#", 1) != 0))
+	{
+		runExecutable(args);
+	}
 		
 	free(com);
 	free(args);
