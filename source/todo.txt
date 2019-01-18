@@ -25,6 +25,9 @@ features to add
  - a more-or-less GUI based folder explorer (text based)
  - wildcards
 
-Read this for keyboard input done manually:
-https://stackoverflow.com/questions/20349585/c-library-function-to-check-the-keypress-from-keyboard-in-linux
 
+RESEARCH
+ - Read this for keyboard input done manually:
+   https://stackoverflow.com/questions/20349585/c-library-function-to-check-the-keypress-from-keyboard-in-linux
+
+ - look into key events
