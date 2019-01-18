@@ -2,7 +2,8 @@
 #include "utils.h"
 
 
-int runExecutable(char **args);
+
+int runExecutables(char **args);
 char **splitCommand(char *command);
 int cd(char **args);
 
@@ -27,9 +28,10 @@ int interpret(char *command)
 	{
 		cd(args);
 	}
+	
 	else if ((strncmp(com, "#", 1) != 0))
 	{
-		runExecutable(args);
+		runExecutables(args);
 	}
 		
 	free(com);
@@ -40,29 +42,85 @@ int interpret(char *command)
 
 
 /**
- * Runs a given command line
+ * changes process to the process in args
  *
  * @param	command		A string holding the command
- * @return	int			An int identifying success (0) or fail (non 0);
+ * @return	int			0 for success
  */
-int runExecutable(char **args)
-//assumes only 1 eternal command present, ie no piping.
+int OLD_runExecutable(char **args)
 {
 	pid_t cpid;
+
 	if ((cpid = fork()) == 0)
 	{
-		//this is the child
+		//pipe stuff
 		execvp(args[0], args);
-		fprintf(stderr, "msh: cannot run %s\n", args[0]);
+		//fprintf(stderr, "msh: cannot run %s\n", args[0]);
+		perror("msh");
 		exit(EXIT_FAILURE);
 	}
 	else
 	{
 		int cstat;
 		wait(&cstat);
-		//check error and report
 	}
-	
+	return 0;
+}
+
+
+
+/**
+ * changes process to the process in args
+ *
+ * @param	command		A string holding the command
+ * @return	int			-1 for failure
+ */
+int runExecutable(char **args)
+{
+
+	execvp(args[0], args);
+	fprintf(stderr, "msh: cannot run %s\n", args[0]);
+	exit(EXIT_FAILURE);
+	return -1;
+}
+
+
+
+
+//TODO: fix runExecutables, this is making msh fail somehow.
+//recursive pipe implementation
+	// eg com1 | com2 | com3 ->  do com1, pass to (com2 | com3) etc 
+int runExecutables(char **args)
+{
+	int pipeIndex = 0;
+	pid_t cpid;
+
+	int i = 0;
+	while (args[i] != NULL)
+	{
+		printf(" word %d is %s\n", i + 1, args[i]);
+		if (args[i][0] == '|')
+		{
+			args[i] = NULL;
+			
+			if ((cpid = fork()) == 0)
+			{
+				//pipe stuff
+				runExecutable(&args[pipeIndex]);
+			}
+			else
+			{
+				int cstat;
+				wait(&cstat);
+			}
+			pipeIndex = i;
+		}
+		else if (args[i+1] == NULL)
+		{
+			runExecutable(args);
+		}
+		i++;
+	}
 	return 0;
 }
 

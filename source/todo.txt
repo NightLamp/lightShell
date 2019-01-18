@@ -2,6 +2,7 @@ This is a list of things that need to be done.
 NOTE this is not in order
 
 "main.c"
+ - start at home directory
  - get if superuser or not and print $ or # accordingly 
 
 "input.c"
