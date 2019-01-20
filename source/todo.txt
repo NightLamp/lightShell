@@ -9,6 +9,7 @@ NOTE this is not in order
  - get double quotes and it expansion working?
 
 "execute.c"
+ - add the actual pipes to runExecutables
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
 		- make exit a builtin fucntion?
@@ -19,7 +20,6 @@ features to add
  - ability to move cursor/edit input
  - command history and tab for autocomplete?
  - directory history and easy back and forward movement
- - piping
  - shell scripts?
  - multitasking (dont wait for completion)
  - a more-or-less GUI based folder explorer (text based)

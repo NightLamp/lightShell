@@ -42,12 +42,12 @@ int interpret(char *command)
 
 
 /**
- * changes process to the process in args
+ * Forks process and then makes the child execute the command contained in args
  *
- * @param	command		A string holding the command
+ * @param	args		an array of strings, null terminated
  * @return	int			0 for success
  */
-int OLD_runExecutable(char **args)
+int forkAndExecute(char **args)
 {
 	pid_t cpid;
 
@@ -70,12 +70,12 @@ int OLD_runExecutable(char **args)
 
 
 /**
- * changes process to the process in args
+ * execs to command in args
  *
- * @param	command		A string holding the command
+ * @param	args		an array of strings, null terminated
  * @return	int			-1 for failure
  */
-int runExecutable(char **args)
+int onlyExecute(char **args)
 {
 
 	execvp(args[0], args);
@@ -86,10 +86,13 @@ int runExecutable(char **args)
 
 
 
-
-//TODO: fix runExecutables, this is making msh fail somehow.
-//recursive pipe implementation
-	// eg com1 | com2 | com3 ->  do com1, pass to (com2 | com3) etc 
+/**
+ * checks array of strings (that is NULL terminated) to determine if pipe characters '|' are present.
+ * It then recursively goes through each pipe until the final NULL value is found. 
+ *
+ * @param	args	array of strings, null terminated
+ * @return	int		0 for success
+ */
 int runExecutables(char **args)
 {
 	int pipeIndex = 0;
@@ -98,7 +101,6 @@ int runExecutables(char **args)
 	int i = 0;
 	while (args[i] != NULL)
 	{
-		printf(" word %d is %s\n", i + 1, args[i]);
 		if (args[i][0] == '|')
 		{
 			args[i] = NULL;
@@ -106,21 +108,20 @@ int runExecutables(char **args)
 			if ((cpid = fork()) == 0)
 			{
 				//pipe stuff
-				runExecutable(&args[pipeIndex]);
+				onlyExecute(&args[pipeIndex]);
 			}
 			else
 			{
 				int cstat;
 				wait(&cstat);
 			}
-			pipeIndex = i;
-		}
-		else if (args[i+1] == NULL)
-		{
-			runExecutable(args);
+			pipeIndex = i + 1;
 		}
 		i++;
 	}
+	forkAndExecute(&args[pipeIndex]);	// runs final command when the NULL terminator has been found, 
+										// this should run all commands that dont include pipes or the
+										// last command after the last pipe char 
 	return 0;
 }
 

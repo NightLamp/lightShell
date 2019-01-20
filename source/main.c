@@ -9,15 +9,19 @@ int main(int argc, char * argv[])
 	strcpy(command, "");	//ensures that command doesnt start with exit
 	
 
-	char *user = getlogin(); //better to use getpwuid(geteuid()) for safety	
-	char hostname[_SC_HOST_NAME_MAX]; gethostname(hostname, _SC_HOST_NAME_MAX);
-	char thecwd[BUFFSIZE]; getcwd(thecwd, BUFFSIZE);
+	char *user;
+	char hostname[_SC_HOST_NAME_MAX];
+	char thecwd[BUFFSIZE]; 
 
 	//command loop
 	while (1)
 	{
+		user = getlogin(); //better to use getpwuid(geteuid()) for safety	
+		gethostname(hostname, _SC_HOST_NAME_MAX);
+		getcwd(thecwd, BUFFSIZE);
+
 		//print prompt
-			//get if SU or not 
+			//TODO: get if SU or not 
 		printf("%s@%s %s $: ", user, hostname, thecwd);
 
 		//get input
