@@ -53,10 +53,9 @@ int forkAndExecute(char **args)
 
 	if ((cpid = fork()) == 0)
 	{
-		//pipe stuff
 		execvp(args[0], args);
-		//fprintf(stderr, "msh: cannot run %s\n", args[0]);
 		perror("msh");
+		fprintf(stderr, "msh: cannot run %s\n", args[0]);
 		exit(EXIT_FAILURE);
 	}
 	else
@@ -94,7 +93,15 @@ int onlyExecute(char **args)
  * @return	int		0 for success
  */
 int runExecutables(char **args)
+//TODO: check why theres an fgets failure
+			// is this affecting the fgets in main.c?
 {
+	int pfd1[2];
+	int pfd2[2];
+	pipe(pfd1);
+	pipe(pfd2);
+	bool isPiped = false;
+
 	int pipeIndex = 0;
 	pid_t cpid;
 
@@ -108,10 +115,27 @@ int runExecutables(char **args)
 			if ((cpid = fork()) == 0)
 			{
 				//pipe stuff
+				dup2(pfd1[1], STDOUT_FILENO);
+				close(pfd1[0]);
+				if (isPiped)
+				{
+					dup2(pfd2[0], STDIN_FILENO);
+					close(pfd2[1]);
+				}
+
 				onlyExecute(&args[pipeIndex]);
 			}
 			else
 			{
+				dup2(pfd1[0], STDIN_FILENO);	//do i need stdin?
+				close(pfd1[1]);
+				if (isPiped)
+				{
+					dup2(pfd2[1], STDOUT_FILENO);
+					close(pfd2[0]);
+					isPiped = true;
+				}
+
 				int cstat;
 				wait(&cstat);
 			}
@@ -119,9 +143,21 @@ int runExecutables(char **args)
 		}
 		i++;
 	}
+	//TODO: check hwo this works out with the piping
 	forkAndExecute(&args[pipeIndex]);	// runs final command when the NULL terminator has been found, 
 										// this should run all commands that dont include pipes or the
 										// last command after the last pipe char 
+	close(pfd1[0]);
+	if (isPiped)
+	{
+		close(pfd2[1]);
+	}
+	else
+	{
+		close(pfd2[1]);
+		close(pfd2[0]);
+	}
+	
 	return 0;
 }
 
