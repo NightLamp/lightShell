@@ -93,6 +93,13 @@ int onlyExecute(char **args)
  * @return	int		0 for success
  */
 int pipeExecuatbles(char **args)
+/*TODO: ls | grep c | less 
+			above doesnt work, stuck in grep. I think its because the pipe is still open
+		ls | less | ls
+			doesnt work, stuck in less. Probably because pipe isnt closed >:(
+
+		look at fcntl and O_NONBLOCK, from site https://www.geeksforgeeks.org/non-blocking-io-with-pipes-in-c/
+*/
 {
 	int pfd[2];
 	bool isPiped = false;
@@ -104,10 +111,10 @@ int pipeExecuatbles(char **args)
 	int i = 0;
 	while (args[i] != NULL)
 	{
-
+		//change all '|' symbols to NULL to act as psuedo NULL terminators for args, then run command after said '|'
 		if (args[i][0] == '|' || args[i+1] == NULL)
 		{
-			printf("command to be run: %s\n", args[pipeIndex]);
+			printf("DEBUG: command to be run: %s\n", args[pipeIndex]);
 
 			// check if we are here from pipe symbol
 			if (args[i+1] != NULL) 
@@ -118,44 +125,28 @@ int pipeExecuatbles(char **args)
 			//child
 			if ((cpid = fork()) == 0)
 			{
-				//if youre noy at the end or you are and have piped before:
-				if (args[i+1] != NULL || isPiped)
+				// dont send final output through pipe
+				if (args[i+1] != NULL)
 				{
-					// dont send final output through pipe
-					if (args[i+1] != NULL)
-					{
-						dup2(pfd[1], STDOUT_FILENO);
-						close(pfd[1]);
-					}
-					else
-					{
-						close(pfd[1]);
-					}
-					
-					//only get input from stdin if there was a command before
-					if (isPiped)
-					{
-						dup2(pfd[0], STDIN_FILENO);
-						close(pfd[0]);
-					}
-					else
-					{
-						close(pfd[0]);
-					}
+					dup2(pfd[1], STDOUT_FILENO);
 				}
-				else
+
+				//only get input from stdin if there was a command before
+				if (isPiped)
 				{
-					close(pfd[0]);
-					close(pfd[1]);
-				}	
-	
+					dup2(pfd[0], STDIN_FILENO);
+				}
+
+				close(pfd[0]);
+				close(pfd[1]);
+
 				onlyExecute(&args[pipeIndex]);
 			}
 
 			//parent
 			else
 			{
-				//close pipe when you get to teh last command
+				// close pipe when you get to the last command
 				if (args[i+1] == NULL)
 				{
 					close(pfd[0]);
