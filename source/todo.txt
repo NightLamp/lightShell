@@ -9,7 +9,7 @@ NOTE this is not in order
  - get double quotes and it expansion working?
 
 "execute.c"
- - add the actual pipes to runExecutables
+ - clean up pipes my goodness
  - check status of command and print error if failed?
  - builtin functions (cd etc..)
 		- make exit a builtin fucntion?
