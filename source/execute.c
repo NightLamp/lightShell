@@ -3,7 +3,7 @@
 
 
 
-int runExecutables(char **args);
+int pipeExecuatbles(char **args);
 char **splitCommand(char *command);
 int cd(char **args);
 
@@ -31,7 +31,7 @@ int interpret(char *command)
 	
 	else if ((strncmp(com, "#", 1) != 0))
 	{
-		runExecutables(args);
+		pipeExecuatbles(args);
 	}
 		
 	free(com);
@@ -92,72 +92,85 @@ int onlyExecute(char **args)
  * @param	args	array of strings, null terminated
  * @return	int		0 for success
  */
-int runExecutables(char **args)
-//TODO: check why theres an fgets failure
-			// is this affecting the fgets in main.c?
+int pipeExecuatbles(char **args)
 {
-	int pfd1[2];
-	int pfd2[2];
-	pipe(pfd1);
-	pipe(pfd2);
+	int pfd[2];
 	bool isPiped = false;
-
 	int pipeIndex = 0;
 	pid_t cpid;
+
+	pipe(pfd);		
 
 	int i = 0;
 	while (args[i] != NULL)
 	{
-		if (args[i][0] == '|')
+
+		if (args[i][0] == '|' || args[i+1] == NULL)
 		{
-			args[i] = NULL;
-			
+			printf("command to be run: %s\n", args[pipeIndex]);
+
+			// check if we are here from pipe symbol
+			if (args[i+1] != NULL) 
+			{
+				args[i] = NULL;	
+			}			
+
+			//child
 			if ((cpid = fork()) == 0)
 			{
-				//pipe stuff
-				dup2(pfd1[1], STDOUT_FILENO);
-				close(pfd1[0]);
-				if (isPiped)
+				//if youre noy at the end or you are and have piped before:
+				if (args[i+1] != NULL || isPiped)
 				{
-					dup2(pfd2[0], STDIN_FILENO);
-					close(pfd2[1]);
+					// dont send final output through pipe
+					if (args[i+1] != NULL)
+					{
+						dup2(pfd[1], STDOUT_FILENO);
+						close(pfd[1]);
+					}
+					else
+					{
+						close(pfd[1]);
+					}
+					
+					//only get input from stdin if there was a command before
+					if (isPiped)
+					{
+						dup2(pfd[0], STDIN_FILENO);
+						close(pfd[0]);
+					}
+					else
+					{
+						close(pfd[0]);
+					}
 				}
-
+				else
+				{
+					close(pfd[0]);
+					close(pfd[1]);
+				}	
+	
 				onlyExecute(&args[pipeIndex]);
 			}
+
+			//parent
 			else
 			{
-				dup2(pfd1[0], STDIN_FILENO);	//do i need stdin?
-				close(pfd1[1]);
-				if (isPiped)
+				//close pipe when you get to teh last command
+				if (args[i+1] == NULL)
 				{
-					dup2(pfd2[1], STDOUT_FILENO);
-					close(pfd2[0]);
-					isPiped = true;
+					close(pfd[0]);
+					close(pfd[1]);
 				}
 
 				int cstat;
 				wait(&cstat);
 			}
-			pipeIndex = i + 1;
+			pipeIndex = i+1;	//offset by 1 so the index starts at command after the |
+			isPiped = true;
 		}
 		i++;
 	}
-	//TODO: check hwo this works out with the piping
-	forkAndExecute(&args[pipeIndex]);	// runs final command when the NULL terminator has been found, 
-										// this should run all commands that dont include pipes or the
-										// last command after the last pipe char 
-	close(pfd1[0]);
-	if (isPiped)
-	{
-		close(pfd2[1]);
-	}
-	else
-	{
-		close(pfd2[1]);
-		close(pfd2[0]);
-	}
-	
+
 	return 0;
 }
 
