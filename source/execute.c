@@ -98,7 +98,10 @@ int pipeExecuatbles(char **args)
 		ls | less | ls
 			doesnt work, stuck in less. Probably because pipe isnt closed >:(
 
-		look at fcntl and O_NONBLOCK, from site https://www.geeksforgeeks.org/non-blocking-io-with-pipes-in-c/
+		wont work as is due to the pipe never closing.
+
+		PIPES talk between parent and child. thus a pipe needs to be made each time a process is made.
+		the returning information must be stored in a buffer and passed into stdin for the next process
 */
 {
 	int pfd[2];
@@ -125,16 +128,16 @@ int pipeExecuatbles(char **args)
 			//child
 			if ((cpid = fork()) == 0)
 			{
-				// dont send final output through pipe
+				// send output through pipe if not final command
 				if (args[i+1] != NULL)
 				{
 					dup2(pfd[1], STDOUT_FILENO);
 				}
 
-				//only get input from stdin if there was a command before
+				//only get input from pipe if there was a command before
 				if (isPiped)
 				{
-					dup2(pfd[0], STDIN_FILENO);
+					dup2(pfd[0], STDIN_FILENO);	
 				}
 
 				close(pfd[0]);
