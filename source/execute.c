@@ -4,6 +4,7 @@
 
 
 int pipeExecuatbles(char **args);
+int pipeExecBounded(char **args, int bound, int outpfd);
 char **splitCommand(char *command);
 int cd(char **args);
 
@@ -93,78 +94,87 @@ int onlyExecute(char **args)
  * @return	int		0 for success
  */
 int pipeExecuatbles(char **args)
-/*TODO: ls | grep c | less 
-			above doesnt work, stuck in grep. I think its because the pipe is still open
-		ls | less | ls
-			doesnt work, stuck in less. Probably because pipe isnt closed >:(
-
-		wont work as is due to the pipe never closing.
-
-		PIPES talk between parent and child. thus a pipe needs to be made each time a process is made.
-		the returning information must be stored in a buffer and passed into stdin for the next process
-*/
 {
-	int pfd[2];
-	bool isPiped = false;
-	int pipeIndex = 0;
-	pid_t cpid;
+	//var decs
 
-	pipe(pfd);		
 
-	int i = 0;
-	while (args[i] != NULL)
+	pipeExecBounded(args, 5, -1);
+/*	
+	//assume theres a command before and after '|'
+	for (int i = 0; args[i] != NULL; i++)
 	{
-		//change all '|' symbols to NULL to act as psuedo NULL terminators for args, then run command after said '|'
-		if (args[i][0] == '|' || args[i+1] == NULL)
+		//when a pipe command is found:
+		if (args[i][0] == '|') 
 		{
-			printf("DEBUG: command to be run: %s\n", args[pipeIndex]);
-
-			// check if we are here from pipe symbol
-			if (args[i+1] != NULL) 
-			{
-				args[i] = NULL;	
-			}			
-
-			//child
-			if ((cpid = fork()) == 0)
-			{
-				// send output through pipe if not final command
-				if (args[i+1] != NULL)
-				{
-					dup2(pfd[1], STDOUT_FILENO);
-				}
-
-				//only get input from pipe if there was a command before
-				if (isPiped)
-				{
-					dup2(pfd[0], STDIN_FILENO);	
-				}
-
-				close(pfd[0]);
-				close(pfd[1]);
-
-				onlyExecute(&args[pipeIndex]);
-			}
-
-			//parent
-			else
-			{
-				// close pipe when you get to the last command
-				if (args[i+1] == NULL)
-				{
-					close(pfd[0]);
-					close(pfd[1]);
-				}
-
-				int cstat;
-				wait(&cstat);
-			}
-			pipeIndex = i+1;	//offset by 1 so the index starts at command after the |
-			isPiped = true;
+			
+			
 		}
-		i++;
 	}
+*/
+	return 0;
+}
 
+
+
+/**
+ * runs a piped execution and pipes output though a pipe. designed to be used 
+ * recursively in the pipeExecutables function
+ *
+ * @param	args	array of strings. NULL terminated
+ * @param	bound	the index to stop at. assumed that args[bound] == NULL
+ * @param 	outpfd	pipe file descriptor to put output into, if -1 then wont pipe output
+ * @return	int		0 for succ
+ */
+int pipeExecBounded(char **args, int bound, int outpfd) 
+{
+	//var decs
+	int pDex = 0;
+	int pCnt = 0;
+	int stat;
+	
+	pid_t c1;
+	pid_t c2;
+
+	//run up to the bound
+	for (int i = 0; i < bound; i++)
+	{
+		if (args[i][0] == '|')
+		{
+			pDex = i;
+			pCnt++;
+		}
+	}
+	//pipe works	
+	int pfd[2];
+	pipe(pfd);
+
+	//switch the '|' with NULL so can use args and bound
+	args[pDex] = NULL;
+
+	//if theres more than one '|' then recurse into this function 
+	if (pCnt > 1)
+	{
+		//piping
+
+		pipeExecBounded(args, pDex, pfd[1]);
+	}
+	//else run the singular command left at the start	
+	else if ((c1 = fork()) == 0)
+	{
+		//piping	
+	
+		onlyExecute(args);
+	}
+	waitpid(c1, &stat, 0);
+
+	//always run last command
+	if ((c2 =fork()) == 0)
+	{
+		//pipe Works
+
+		onlyExecute(&args[pDex+1]);
+	}
+	waitpid(c2, &stat, 0);
 	return 0;
 }
 
